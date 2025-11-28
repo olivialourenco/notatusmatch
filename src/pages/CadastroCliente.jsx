@@ -24,9 +24,9 @@ function CadastroCliente() {
   }
 
   return (
-    <main className="min-h-screen flex bg-[#0B1120]">
+    <main className="flex flex-col lg:flex-row bg-[#0B1120] flex-1">
       {/* Seção Esquerda - Formulário */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 py-12 bg-[#0B1120] overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 py-8 md:py-12 bg-[#0B1120] overflow-y-auto">
         <div className="w-full max-w-2xl">
           {/* Progress Indicator */}
           <div className="flex items-center justify-center mb-8">
@@ -54,7 +54,7 @@ function CadastroCliente() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold mb-2 text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
             Cadastro de Cliente
           </h2>
           <p className="text-gray-400 mb-8">
@@ -194,7 +194,7 @@ function CadastroCliente() {
             </div>
 
             {/* Botões */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
@@ -225,7 +225,7 @@ function CadastroCliente() {
       </div>
 
       {/* Seção Direita - Informações */}
-      <div className="hidden lg:flex w-1/3 bg-[#111529] p-8 overflow-y-auto">
+      <div className="hidden lg:flex w-full lg:w-1/3 bg-[#111529] p-6 lg:p-8 overflow-y-auto">
         <div className="w-full">
           <h3 className="text-2xl font-bold text-white mb-6">Por que se cadastrar?</h3>
           

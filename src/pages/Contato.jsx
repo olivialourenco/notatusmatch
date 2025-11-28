@@ -32,7 +32,7 @@ function Contato() {
   return (
     <main className="min-h-screen bg-[#0B1120] text-white">
       {/* Hero Section */}
-      <section className="relative py-20 px-6 overflow-hidden bg-gradient-to-br from-[#111529] via-[#0B1120] to-[#111529]">
+      <section className="relative py-12 md:py-20 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-[#111529] via-[#0B1120] to-[#111529]">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 text-transparent bg-clip-text">
             Entre em Contato
@@ -44,12 +44,12 @@ function Contato() {
       </section>
 
       {/* Conteúdo Principal */}
-      <section className="py-20 px-6">
+      <section className="py-12 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Informações de Contato */}
             <div className="lg:col-span-1 space-y-6">
-              <div className="bg-[#111529] border border-gray-800 rounded-2xl p-8">
+              <div className="bg-[#111529] border border-gray-800 rounded-2xl p-6 md:p-8">
                 <h2 className="text-2xl font-bold text-white mb-6">Informações de Contato</h2>
                 
                 <div className="space-y-6">
@@ -121,7 +121,7 @@ function Contato() {
 
             {/* Formulário de Contato */}
             <div className="lg:col-span-2">
-              <div className="bg-[#111529] border border-gray-800 rounded-2xl p-8">
+              <div className="bg-[#111529] border border-gray-800 rounded-2xl p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
                     <MessageSquare size={24} className="text-white" />

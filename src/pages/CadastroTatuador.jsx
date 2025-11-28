@@ -98,37 +98,37 @@ function CadastroTatuador() {
   }
 
   return (
-    <main className="min-h-screen flex bg-[#0B1120]">
+    <main className="flex flex-col lg:flex-row bg-[#0B1120] flex-1">
       {/* Seção Esquerda - Formulário */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 py-12 bg-[#0B1120] overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 py-8 md:py-12 bg-[#0B1120] overflow-y-auto">
         <div className="w-full max-w-2xl">
           {/* Progress Indicator */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-center mb-6 md:mb-8">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white font-semibold">
                   1
                 </div>
-                <span className="ml-2 text-sm text-gray-400">Cadastro</span>
+                <span className="ml-1 md:ml-2 text-xs md:text-sm text-gray-400 hidden sm:inline">Cadastro</span>
               </div>
-              <div className="w-12 h-px bg-gray-700"></div>
+              <div className="w-6 md:w-12 h-px bg-gray-700"></div>
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-semibold">
                   2
                 </div>
-                <span className="ml-2 text-sm text-gray-400">Perfil</span>
+                <span className="ml-1 md:ml-2 text-xs md:text-sm text-gray-400 hidden sm:inline">Perfil</span>
               </div>
-              <div className="w-12 h-px bg-gray-700"></div>
+              <div className="w-6 md:w-12 h-px bg-gray-700"></div>
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 font-semibold">
                   3
                 </div>
-                <span className="ml-2 text-sm text-gray-400">Confirmação</span>
+                <span className="ml-1 md:ml-2 text-xs md:text-sm text-gray-400 hidden sm:inline">Confirmação</span>
               </div>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold mb-2 text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
             Cadastro de Tatuador
           </h2>
           <p className="text-gray-400 mb-8">
@@ -332,11 +332,11 @@ function CadastroTatuador() {
             </div>
 
             {/* Botões */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#111529] border border-gray-700 text-gray-300 rounded-xl font-semibold hover:border-gray-600 hover:text-white transition-all"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#111529] border border-gray-700 text-gray-300 rounded-xl font-semibold hover:border-gray-600 hover:text-white transition-all"
               >
                 <ArrowLeft size={18} />
                 <span>Voltar</span>
@@ -363,7 +363,7 @@ function CadastroTatuador() {
       </div>
 
       {/* Seção Direita - Planos e Resumo */}
-      <div className="hidden lg:flex w-1/3 bg-[#111529] p-8 overflow-y-auto">
+      <div className="hidden lg:flex w-full lg:w-1/3 bg-[#111529] p-6 lg:p-8 overflow-y-auto">
         <div className="w-full">
           <h3 className="text-2xl font-bold text-white mb-6">Escolha seu plano</h3>
           <p className="text-gray-400 mb-6 text-sm">

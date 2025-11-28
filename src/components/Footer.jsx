@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="relative mt-16 bg-[#0A0E1A] border-t border-gray-800 py-10 text-center text-gray-400">
+    <footer className="relative bg-[#0A0E1A] border-t border-gray-800 py-6 md:py-10 text-center text-gray-400 px-4">
      
 
       {/* Logo centralizada */}

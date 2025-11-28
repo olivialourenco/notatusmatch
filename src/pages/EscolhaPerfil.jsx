@@ -5,22 +5,22 @@ function EscolhaPerfil() {
   const navigate = useNavigate()
 
   return (
-    <main className="min-h-screen bg-[#0B1120] flex items-center justify-center px-6 py-12">
+    <main className="min-h-screen bg-[#0B1120] flex items-center justify-center px-4 sm:px-6 py-8 md:py-12">
       <div className="w-full max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 text-transparent bg-clip-text leading-tight pb-2">
             Escolha seu tipo de conta
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
             Você é tatuador ou cliente? Escolha abaixo para acessar ou criar sua conta e começar sua jornada na NotatusMatch.
           </p>
         </div>
 
         {/* Cards de Escolha */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
           {/* Card Tatuador */}
-          <div className="group relative bg-[#111529] border border-gray-800 rounded-2xl p-8 hover:border-pink-500/50 transition-all duration-300 cursor-pointer overflow-hidden">
+          <div className="group relative bg-[#111529] border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-pink-500/50 transition-all duration-300 cursor-pointer overflow-hidden">
             {/* Gradiente de fundo no hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             
@@ -141,7 +141,7 @@ function EscolhaPerfil() {
         </div>
 
         {/* Seção de Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
           <div className="bg-[#111529] border border-gray-800 rounded-xl p-6 text-center">
             <div className="w-12 h-12 rounded-lg bg-pink-500/20 flex items-center justify-center mx-auto mb-3">
               <Users size={24} className="text-pink-400" />

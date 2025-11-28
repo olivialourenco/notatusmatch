@@ -8,9 +8,9 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false)
 
   return (
-    <main className="min-h-screen flex bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200">
+    <main className="flex flex-col lg:flex-row bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200 flex-1 min-h-[calc(100vh-120px)]">
       {/* Seção Esquerda - Formulário de Login */}
-      <div className="w-1/4 flex flex-col items-start justify-center px-12 py-12 bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200">
+      <div className="w-full lg:w-1/3 xl:w-1/4 flex flex-col items-start justify-center px-6 sm:px-8 md:px-12 py-16 md:py-20 lg:py-24 bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200 lg:ml-auto min-h-full">
         <div className="w-full max-w-md">
           {/* Logo e Título */}
           <div className="mb-8">
@@ -20,7 +20,7 @@ function Login() {
                 alt="NotatusMatch" 
                 className="h-10 w-auto mb-4"
               />
-              <h1 className="text-4xl font-bold text-black">Login</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold text-black">Login</h1>
             </div>
           </div>
 
@@ -123,16 +123,16 @@ function Login() {
       </div>
 
       {/* Seção Direita - Design com Slogans */}
-      <div className="hidden lg:flex w-3/4 relative overflow-hidden bg-[#0B1120]">
-        {/* Fundo escuro */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120] via-[#1a1f3a] to-[#0B1120]"></div>
+      <div className="hidden lg:flex w-full lg:w-2/3 xl:w-3/4 relative overflow-hidden bg-[#0B1120] min-h-full">
+        {/* Fundo com animação wave igual à Home */}
+        <div className="absolute inset-0 animate-gradient-wave"></div>
 
         {/* Slogans */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-          <h2 className="text-4xl font-bold leading-tight text-white mb-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <h2 className="text-3xl md:text-4xl font-bold leading-tight text-white mb-4 px-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Conectando arte e paixão
           </h2>
-          <p className="text-lg text-white/80 mb-6 max-w-lg" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <p className="text-base md:text-lg text-white/80 mb-6 max-w-lg px-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Encontre o tatuador perfeito para eternizar sua história
           </p>
           <div className="flex flex-col items-start space-y-3 max-w-md">

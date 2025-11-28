@@ -7,7 +7,7 @@ function Home() {
   return (
     <main className="min-h-screen bg-[#0B1120] text-white">
       {/* HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-6 py-20 overflow-hidden">
+      <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 py-12 md:py-20 overflow-hidden">
         {/* Background Gradient com animação wave */}
         <div className="absolute inset-0 animate-gradient-wave"></div>
         
@@ -57,7 +57,7 @@ function Home() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section className="py-20 px-6 bg-[#111529]">
+      <section className="py-12 md:py-20 px-4 sm:px-6 bg-[#111529]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
@@ -113,9 +113,9 @@ function Home() {
       </section>
 
       {/* ESTATÍSTICAS */}
-      <section className="py-16 px-6 bg-[#0B1120] border-y border-gray-800">
+      <section className="py-12 md:py-16 px-4 sm:px-6 bg-[#0B1120] border-y border-gray-800">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text mb-2">
                 500+
@@ -145,7 +145,7 @@ function Home() {
       </section>
 
       {/* BENEFÍCIOS */}
-      <section className="py-20 px-6 bg-[#111529]">
+      <section className="py-12 md:py-20 px-4 sm:px-6 bg-[#0B1120]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
@@ -202,7 +202,7 @@ function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
             <div className="group bg-[#111529] border border-gray-800 rounded-2xl overflow-hidden hover:border-pink-500/50 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-pink-500/10">
               <div className="relative h-64 overflow-hidden">
                 <img 

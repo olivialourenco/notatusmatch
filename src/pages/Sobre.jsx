@@ -4,7 +4,7 @@ function Sobre() {
   return (
     <main className="min-h-screen bg-[#0B1120] text-white">
       {/* Hero Section */}
-      <section className="relative py-20 px-6 overflow-hidden bg-gradient-to-br from-[#111529] via-[#0B1120] to-[#111529]">
+      <section className="relative py-12 md:py-20 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-[#111529] via-[#0B1120] to-[#111529]">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 text-transparent bg-clip-text">
             Sobre o NotatusMatch
@@ -17,7 +17,7 @@ function Sobre() {
       </section>
 
       {/* Missão e Visão */}
-      <section className="py-20 px-6 bg-[#111529]">
+      <section className="py-12 md:py-20 px-4 sm:px-6 bg-[#111529]">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-[#0B1120] border border-gray-800 rounded-2xl p-8">
@@ -44,7 +44,7 @@ function Sobre() {
       </section>
 
       {/* Valores */}
-      <section className="py-20 px-6">
+      <section className="py-12 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
@@ -90,7 +90,7 @@ function Sobre() {
       </section>
 
       {/* História */}
-      <section className="py-20 px-6 bg-[#111529]">
+      <section className="py-12 md:py-20 px-4 sm:px-6 bg-[#111529]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
@@ -117,7 +117,7 @@ function Sobre() {
       </section>
 
       {/* Estatísticas */}
-      <section className="py-20 px-6">
+      <section className="py-12 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
