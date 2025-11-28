@@ -28,6 +28,13 @@ function Header() {
         >
           Sobre
         </Link>
+
+        <Link
+          to="/contato"
+          className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block"
+        >
+          Contato
+        </Link>
       </nav>
     </header>
   )

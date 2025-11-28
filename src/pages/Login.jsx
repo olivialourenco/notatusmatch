@@ -1,60 +1,161 @@
 import { useNavigate } from "react-router-dom"
+import { Mail, Eye, EyeOff } from "lucide-react"
+import { useState } from "react"
 
 function Login() {
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen text-white text-center px-6">
-      {/* Caixa de fundo */}
-      <div className="bg-[#111529] p-10 rounded-2xl shadow-lg w-full max-w-md animate-fade-in">
-        <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
-          Faça seu Login
-        </h2>
+    <main className="min-h-screen flex bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200">
+      {/* Seção Esquerda - Formulário de Login */}
+      <div className="w-1/4 flex flex-col items-start justify-center px-12 py-12 bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200">
+        <div className="w-full max-w-md">
+          {/* Logo e Título */}
+          <div className="mb-8">
+            <div className="mb-6">
+              <img 
+                src="/src/assets/Logo2.png" 
+                alt="NotatusMatch" 
+                className="h-10 w-auto mb-4"
+              />
+              <h1 className="text-4xl font-bold text-black">Login</h1>
+            </div>
+          </div>
 
-        <p className="text-gray-300 mb-8">
-          Acesse sua conta para continuar explorando o NotatusMatch.
-        </p>
+          {/* Link para cadastro */}
+          <p className="text-gray-700 mb-8 text-sm">
+            Não tem uma conta?{" "}
+            <span 
+              onClick={() => navigate("/escolha-perfil")}
+              className="text-pink-600 hover:text-pink-500 cursor-pointer font-semibold transition-colors"
+            >
+              Cadastre-se no NotatusMatch
+            </span>
+          </p>
 
-        <form className="flex flex-col space-y-4 text-left">
-          <label className="text-gray-300 text-sm">E-mail</label>
-          <input
-            type="email"
-            placeholder="seuemail@exemplo.com"
-            className="p-3 rounded-md bg-[#0B1120] border border-gray-600 text-white focus:border-pink-500 focus:outline-none"
-          />
+          {/* Formulário */}
+          <form className="space-y-5">
+            {/* Campo Email */}
+            <div>
+              <label className="block text-gray-800 text-sm mb-2">E-mail</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="seuemail@exemplo.com"
+                  className="w-full p-3 pr-10 rounded-md bg-white border border-gray-300 text-black placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <Mail size={18} className="text-gray-400" />
+                </div>
+              </div>
+            </div>
 
-          <label className="text-gray-300 text-sm">Senha</label>
-          <input
-            type="password"
-            placeholder="********"
-            className="p-3 rounded-md bg-[#0B1120] border border-gray-600 text-white focus:border-pink-500 focus:outline-none"
-          />
+            {/* Campo Senha */}
+            <div>
+              <label className="block text-gray-800 text-sm mb-2">Senha</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  className="w-full p-3 pr-10 rounded-md bg-white border border-gray-300 text-black placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
 
-          {/* Botão Entrar */}
-          <button
-            type="submit"
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold mt-4 hover:scale-110 hover:-translate-y-1 transition-transform"
-          >
-            Entrar
-          </button>
+            {/* Remember Me */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-400 bg-white text-pink-500 focus:ring-pink-500 focus:ring-offset-0 cursor-pointer"
+              />
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-800 cursor-pointer">
+                Lembrar-me
+              </label>
+            </div>
 
-          {/* Botão Voltar */}
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-8 py-3 rounded-lg font-semibold mt-2 hover:scale-110 hover:-translate-y-1 transition-transform"
-          >
-            Voltar
-          </button>
-        </form>
+            {/* Botão Login */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all duration-300 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50"
+            >
+              Entrar
+            </button>
+          </form>
 
-        {/* Esqueci a senha */}
-        <p className="text-gray-400 mt-6 text-sm">
-          Esqueceu sua senha?{" "}
-          <span className="text-pink-400 hover:text-pink-300 cursor-pointer transition-colors duration-200">
-            Recuperar acesso
-          </span>
-        </p>
+          {/* Esqueceu a senha */}
+          <p className="text-center mt-6">
+            <span 
+              onClick={() => navigate("/escolha-perfil")}
+              className="text-pink-600 hover:text-pink-500 cursor-pointer text-sm transition-colors"
+            >
+              Esqueceu sua senha?
+            </span>
+          </p>
+
+          {/* Rodapé */}
+          <div className="mt-12 text-center">
+            <p className="text-gray-600 text-xs mb-2">
+              Copyright © 2024 NotatusMatch. NotatusMatch™ é uma marca registrada.
+            </p>
+            <div className="flex justify-center gap-4 text-xs">
+              <span className="text-gray-700 hover:text-gray-600 cursor-pointer transition-colors">
+                Termos de Serviço
+              </span>
+              <span className="text-gray-700">|</span>
+              <span className="text-gray-700 hover:text-gray-600 cursor-pointer transition-colors">
+                Política de Privacidade
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Seção Direita - Design com Slogans */}
+      <div className="hidden lg:flex w-3/4 relative overflow-hidden bg-[#0B1120]">
+        {/* Fundo escuro */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120] via-[#1a1f3a] to-[#0B1120]"></div>
+
+        {/* Slogans */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <h2 className="text-4xl font-bold leading-tight text-white mb-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Conectando arte e paixão
+          </h2>
+          <p className="text-lg text-white/80 mb-6 max-w-lg" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Encontre o tatuador perfeito para eternizar sua história
+          </p>
+          <div className="flex flex-col items-start space-y-3 max-w-md">
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 rounded-full bg-white"></div>
+              <p className="text-base text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Portfólios diversos e profissionais
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 rounded-full bg-white"></div>
+              <p className="text-base text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Agendamento fácil e seguro
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 rounded-full bg-white"></div>
+              <p className="text-base text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Conexão direta com artistas
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   )
