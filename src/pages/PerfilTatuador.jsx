@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { MapPin, Star, Award, Users, ArrowLeft, Mail, Phone, Calendar } from 'lucide-react'
+import { MapPin, Star, Award, Users, ArrowLeft, Mail, Phone, Calendar, CheckCircle2 } from 'lucide-react'
 import { buscarUsuarioPorId } from '../lib/supabaseOrcamento'
 import FormularioSolicitacao from '../components/FormularioSolicitacao'
 import { estaLogado, ehCliente } from '../lib/auth'
@@ -18,33 +18,7 @@ function PerfilTatuador() {
 
   const carregarTatuador = async () => {
     try {
-      // Dados mockados para o Rafael Santos (para teste)
-      const tatuadoresMockados = {
-        '00000000-0000-0000-0000-000000000002': {
-          id: '00000000-0000-0000-0000-000000000002',
-          nome: 'Rafael Santos',
-          email: 'rafael@teste.com',
-          tipo_usuario: 'tatuador',
-          telefone: '(11) 77777-7777',
-          foto_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
-          especialidade: 'Realismo',
-          estilo: 'Retratos',
-          localizacao: 'São Paulo, SP',
-          nota: 4.8,
-          avaliacoes: 127,
-          experiencia: '8 anos',
-          trabalhos: 450
-        }
-      }
-
-      // Se for o ID do Rafael Santos, usar dados mockados
-      if (tatuadoresMockados[id]) {
-        setTatuador(tatuadoresMockados[id])
-        setLoading(false)
-        return
-      }
-
-      // Caso contrário, tentar buscar no banco
+      // Buscar tatuador no banco
       const { data, error } = await buscarUsuarioPorId(id)
       if (error) throw error
       
@@ -56,27 +30,8 @@ function PerfilTatuador() {
       }
     } catch (error) {
       console.error('Erro ao carregar tatuador:', error)
-      // Se der erro, tentar usar dados mockados
-      const tatuadoresMockados = {
-        '00000000-0000-0000-0000-000000000002': {
-          id: '00000000-0000-0000-0000-000000000002',
-          nome: 'Rafael Santos',
-          email: 'rafael@teste.com',
-          tipo_usuario: 'tatuador',
-          telefone: '(11) 77777-7777',
-          foto_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
-          especialidade: 'Realismo',
-          estilo: 'Retratos',
-          localizacao: 'São Paulo, SP',
-          nota: 4.8,
-          avaliacoes: 127,
-          experiencia: '8 anos',
-          trabalhos: 450
-        }
-      }
-      if (tatuadoresMockados[id]) {
-        setTatuador(tatuadoresMockados[id])
-      }
+      // Se der erro, redirecionar para lista de tatuadores
+      navigate('/tatuadores')
     } finally {
       setLoading(false)
     }
@@ -149,19 +104,29 @@ function PerfilTatuador() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Avatar */}
-            <div className="flex-shrink-0">
+              <div className="flex-shrink-0">
               <div className="relative">
-                <img
-                  src={tatuador.foto_url || (tatuador.id === '00000000-0000-0000-0000-000000000002' ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' : `https://i.pravatar.cc/300?img=${id}`)}
-                  alt={tatuador.nome}
-                  className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500 object-cover"
-                  onError={(e) => {
-                    e.target.src = tatuador.id === '00000000-0000-0000-0000-000000000002' 
-                      ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'
-                      : `https://i.pravatar.cc/300?img=${id}`
-                  }}
-                />
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-[#111529]"></div>
+                {tatuador.foto_url ? (
+                  <img
+                    src={tatuador.foto_url}
+                    alt={tatuador.nome}
+                    className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500 object-cover"
+                    onError={(e) => {
+                      e.target.src = `https://i.pravatar.cc/300?img=${tatuador.id?.slice(-2) || '1'}`
+                    }}
+                  />
+                ) : (
+                  <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <span className="text-white text-2xl font-bold">
+                      {tatuador.nome?.charAt(0).toUpperCase() || 'T'}
+                    </span>
+                  </div>
+                )}
+                {tatuador.verificado && (
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-[#111529] flex items-center justify-center">
+                    <CheckCircle2 size={16} className="text-white" />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -170,7 +135,31 @@ function PerfilTatuador() {
               <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 text-transparent bg-clip-text">
                 {tatuador.nome}
               </h1>
-              <p className="text-pink-400 text-lg font-medium mb-4">{tatuador.especialidade || 'Tatuador Profissional'}</p>
+              <div className="flex items-center gap-3 mb-4">
+                <p className="text-pink-400 text-lg font-medium">{tatuador.especialidade || 'Tatuador Profissional'}</p>
+                {tatuador.estilo && (
+                  <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-medium">
+                    {tatuador.estilo}
+                  </span>
+                )}
+                {tatuador.verificado && (
+                  <span className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm font-medium flex items-center gap-1">
+                    <CheckCircle2 size={14} />
+                    Verificado
+                  </span>
+                )}
+                {tatuador.premium && (
+                  <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full text-sm font-medium">
+                    Premium
+                  </span>
+                )}
+              </div>
+              {tatuador.localizacao && (
+                <div className="flex items-center gap-2 text-gray-400 mb-4">
+                  <MapPin size={18} />
+                  <span>{tatuador.localizacao}</span>
+                </div>
+              )}
 
               {/* Estatísticas */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">

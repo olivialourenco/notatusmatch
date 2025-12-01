@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Mail, Phone, User, ArrowLeft } from "lucide-react"
+import { criarUsuario } from "../lib/supabaseOrcamento"
 
 function CadastroCliente() {
   const navigate = useNavigate()
@@ -12,6 +13,8 @@ function CadastroCliente() {
     cidade: "",
     estado: "",
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -21,6 +24,67 @@ function CadastroCliente() {
   const handleGoogleSignup = () => {
     // Implementar integração com Google OAuth
     console.log("Cadastro com Google")
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    // Validações
+    if (!formData.nome.trim()) {
+      setError("Por favor, preencha seu nome completo")
+      setLoading(false)
+      return
+    }
+
+    if (!formData.email.trim()) {
+      setError("Por favor, preencha seu email")
+      setLoading(false)
+      return
+    }
+
+    if (!formData.senha || formData.senha.length < 8) {
+      setError("A senha deve ter no mínimo 8 caracteres")
+      setLoading(false)
+      return
+    }
+
+    try {
+      // Criar localização se cidade e estado foram preenchidos
+      const localizacao = formData.cidade && formData.estado 
+        ? `${formData.cidade}, ${formData.estado}`
+        : null
+
+      // Criar usuário no banco
+      const { data, error: createError } = await criarUsuario({
+        nome: formData.nome.trim(),
+        email: formData.email.toLowerCase().trim(),
+        senha: formData.senha,
+        tipo_usuario: 'cliente',
+        telefone: formData.telefone || null,
+        localizacao: localizacao
+      })
+
+      if (createError) {
+        if (createError.code === '23505') {
+          setError("Este email já está cadastrado. Tente fazer login.")
+        } else {
+          setError("Erro ao criar conta. Tente novamente.")
+        }
+        setLoading(false)
+        return
+      }
+
+      // Sucesso - redirecionar para login
+      alert("Conta criada com sucesso! Faça login para continuar.")
+      navigate("/login")
+    } catch (err) {
+      console.error("Erro no cadastro:", err)
+      setError("Erro ao criar conta. Tente novamente.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -94,8 +158,15 @@ function CadastroCliente() {
             <div className="flex-1 h-px bg-gray-700"></div>
           </div>
 
+          {/* Mensagem de Erro */}
+          {error && (
+            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
           {/* Formulário */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Nome Completo */}
             <div>
               <label className="block text-gray-300 text-sm mb-2">Nome completo</label>
@@ -205,9 +276,10 @@ function CadastroCliente() {
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg shadow-pink-500/30"
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg shadow-pink-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Criar conta
+                {loading ? "Criando conta..." : "Criar conta"}
               </button>
             </div>
           </form>

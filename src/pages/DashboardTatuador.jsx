@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar, Eye, CheckCircle, Clock, Filter, ArrowRight, User, Image as ImageIcon } from 'lucide-react'
 import { buscarSolicitacoesTatuador, contarSolicitacoesPendentes, atualizarStatusSolicitacao } from '../lib/supabaseOrcamento'
+import { getUsuarioLogado, ehTatuador } from '../lib/auth'
 
 function DashboardTatuador() {
   const navigate = useNavigate()
@@ -9,35 +10,55 @@ function DashboardTatuador() {
   const [loading, setLoading] = useState(true)
   const [filtroStatus, setFiltroStatus] = useState(null) // null = todas, 'pendente', 'visto', 'respondido'
   const [contadorPendentes, setContadorPendentes] = useState(0)
-
-  // TODO: Obter tatuadorId do usuário logado
-  // Por enquanto, vamos usar um ID temporário
-  const tatuadorId = '00000000-0000-0000-0000-000000000002' // Substituir com auth.uid() depois
+  const [tatuadorId, setTatuadorId] = useState(null)
+  const [verificandoUsuario, setVerificandoUsuario] = useState(true)
 
   useEffect(() => {
-    carregarSolicitacoes()
-    carregarContador()
-  }, [filtroStatus])
+    // Verificar se está logado como tatuador
+    const usuario = getUsuarioLogado()
+    if (!usuario || !ehTatuador()) {
+      navigate('/login', { 
+        state: { 
+          message: 'Você precisa estar logado como tatuador para acessar o dashboard' 
+        } 
+      })
+      return
+    }
+    setTatuadorId(usuario.id)
+    setVerificandoUsuario(false)
+  }, [navigate])
+
+  useEffect(() => {
+    if (tatuadorId) {
+      carregarSolicitacoes()
+      carregarContador()
+    }
+  }, [tatuadorId, filtroStatus])
 
   const carregarSolicitacoes = async () => {
+    if (!tatuadorId) return
     setLoading(true)
     try {
       const { data, error } = await buscarSolicitacoesTatuador(tatuadorId, filtroStatus)
       if (error) throw error
+      // A função já filtra por tatuador_id, então apenas definir os dados
       setSolicitacoes(data || [])
     } catch (error) {
       console.error('Erro ao carregar solicitações:', error)
+      setSolicitacoes([])
     } finally {
       setLoading(false)
     }
   }
 
   const carregarContador = async () => {
+    if (!tatuadorId) return
     try {
       const { count } = await contarSolicitacoesPendentes(tatuadorId)
-      setContadorPendentes(count)
+      setContadorPendentes(count || 0)
     } catch (error) {
       console.error('Erro ao carregar contador:', error)
+      setContadorPendentes(0)
     }
   }
 
@@ -168,7 +189,7 @@ function DashboardTatuador() {
 
       {/* Lista de Solicitações */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
-        {loading ? (
+        {verificandoUsuario || loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
             <p className="text-gray-400">Carregando solicitações...</p>

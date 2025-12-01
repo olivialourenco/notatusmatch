@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { MapPin, Star, Search, Filter, Award, Clock, Users, CheckCircle2 } from "lucide-react"
+import { buscarTatuadores } from "../lib/supabaseOrcamento"
 
 function Tatuadores() {
   const navigate = useNavigate()
@@ -15,6 +16,8 @@ function Tatuadores() {
   const [aplicarFiltro, setAplicarFiltro] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [tatuadores, setTatuadores] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const [sugestoes, setSugestoes] = useState([])
   const todasCidades = [
@@ -50,117 +53,69 @@ function Tatuadores() {
     )
   }
 
-  // Dados dos tatuadores expandidos
-  const tatuadores = [
-    {
-      id: '00000000-0000-0000-0000-000000000002',
-      nome: "Rafael Santos",
-      especialidade: "Realismo",
-      estilo: "Retratos",
-      localizacao: "São Paulo, SP",
-      nota: 4.8,
-      avaliacoes: 127,
-      experiencia: "8 anos",
-      trabalhos: 450,
-      imagem: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: true,
-      portfolio: [
-        "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
-      ]
-    },
-    {
-      id: '00000000-0000-0000-0000-000000000003',
-      nome: "Ana Costa",
-      especialidade: "Fine Line",
-      estilo: "Minimalismo",
-      localizacao: "Curitiba, PR",
-      nota: 4.9,
-      avaliacoes: 203,
-      experiencia: "6 anos",
-      trabalhos: 320,
-      imagem: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: false,
-      portfolio: [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
-      ]
-    },
-    {
-      id: '00000000-0000-0000-0000-000000000004',
-      nome: "Lucas Oliveira",
-      especialidade: "Old School",
-      estilo: "Colorido",
-      localizacao: "Rio de Janeiro, RJ",
-      nota: 4.6,
-      avaliacoes: 89,
-      experiencia: "5 anos",
-      trabalhos: 280,
-      imagem: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: true,
-      portfolio: [
-        "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
-      ]
-    },
-    {
-      id: '00000000-0000-0000-0000-000000000005',
-      nome: "Mariana Silva",
-      especialidade: "Aquarela",
-      estilo: "Colorido",
-      localizacao: "Belo Horizonte, MG",
-      nota: 4.7,
-      avaliacoes: 156,
-      experiencia: "7 anos",
-      trabalhos: 380,
-      imagem: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: false,
-      portfolio: [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
-      ]
-    },
-    {
-      id: '00000000-0000-0000-0000-000000000006',
-      nome: "Diego Black",
-      especialidade: "Tribal",
-      estilo: "Preto & Cinza",
-      localizacao: "São Paulo, SP",
-      nota: 4.8,
-      avaliacoes: 198,
-      experiencia: "10 anos",
-      trabalhos: 520,
-      imagem: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: true,
-      portfolio: [
-        "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
-      ]
-    },
-    {
-      id: '00000000-0000-0000-0000-000000000007',
-      nome: "Julia Martins",
-      especialidade: "Geometric",
-      estilo: "Minimalismo",
-      localizacao: "Porto Alegre, RS",
-      nota: 4.9,
-      avaliacoes: 142,
-      experiencia: "4 anos",
-      trabalhos: 210,
-      imagem: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop",
-      verificado: true,
-      premium: false,
-      portfolio: [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
-      ]
-    },
-  ]
+  // Buscar tatuadores do banco
+  useEffect(() => {
+    const carregarTatuadores = async () => {
+      setLoading(true)
+      try {
+        const { data, error } = await buscarTatuadores()
+        if (error) throw error
+        
+        // Mapear dados do banco para o formato esperado
+        const tatuadoresFormatados = (data || []).map(t => {
+          // Processar portfolio (pode ser JSONB, array ou string)
+          let portfolioArray = []
+          if (t.portfolio) {
+            if (Array.isArray(t.portfolio)) {
+              portfolioArray = t.portfolio
+            } else if (typeof t.portfolio === 'string') {
+              try {
+                portfolioArray = JSON.parse(t.portfolio)
+              } catch {
+                portfolioArray = [t.portfolio]
+              }
+            } else {
+              portfolioArray = []
+            }
+          }
+          
+          // Se não tiver portfolio, usar imagens padrão
+          if (portfolioArray.length === 0) {
+            portfolioArray = [
+              "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
+              "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
+            ]
+          }
+          
+          return {
+            id: t.id,
+            nome: t.nome,
+            especialidade: t.especialidade || '',
+            estilo: t.estilo || '',
+            localizacao: t.localizacao || '',
+            nota: parseFloat(t.nota) || 0,
+            avaliacoes: t.avaliacoes || 0,
+            experiencia: t.experiencia || '',
+            trabalhos: t.trabalhos || 0,
+            imagem: t.foto_url || `https://i.pravatar.cc/150?img=${t.id}`,
+            verificado: t.verificado || false,
+            premium: t.premium || false,
+            portfolio: portfolioArray
+          }
+        })
+        
+        setTatuadores(tatuadoresFormatados)
+      } catch (error) {
+        console.error('Erro ao carregar tatuadores:', error)
+        setTatuadores([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    carregarTatuadores()
+  }, [])
+
 
   const filtrados = aplicarFiltro
     ? tatuadores.filter((t) => {
@@ -350,27 +305,27 @@ function Tatuadores() {
 
       {/* Resultados */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 md:pb-16">
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-400">
-            {filtrados.length} {filtrados.length === 1 ? "tatuador encontrado" : "tatuadores encontrados"}
-          </p>
-        </div>
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+            <p className="text-gray-400">Carregando tatuadores...</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-gray-400">
+                {filtrados.length} {filtrados.length === 1 ? "tatuador encontrado" : "tatuadores encontrados"}
+              </p>
+            </div>
 
         {/* Grid de Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filtrados.map((t) => {
-            // Apenas o Rafael Santos pode ser clicado
-            const isRafaelSantos = t.id === '00000000-0000-0000-0000-000000000002'
-            
             return (
             <div
               key={t.id}
-              onClick={isRafaelSantos ? () => navigate(`/tatuador/${t.id}`) : undefined}
-              className={`group bg-[#111529] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 ${
-                isRafaelSantos 
-                  ? 'hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/10 cursor-pointer' 
-                  : 'cursor-default'
-              }`}
+              onClick={() => navigate(`/tatuador/${t.id}`)}
+              className="group bg-[#111529] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/10 cursor-pointer"
             >
               {/* Imagem do Portfolio */}
               <div className="relative h-48 overflow-hidden bg-gradient-to-br from-purple-900/20 to-pink-900/20">
@@ -405,14 +360,24 @@ function Tatuadores() {
                 {/* Avatar e Nome */}
                 <div className="flex items-center gap-4 mb-4">
                   <div className="relative">
-                    <img
-                      src={t.imagem}
-                      alt={t.nome}
-                      className="w-16 h-16 rounded-full border-2 border-pink-500 object-cover"
-                      onError={(e) => {
-                        e.target.src = `https://i.pravatar.cc/150?img=${t.id}`
-                      }}
-                    />
+                    {t.imagem ? (
+                      <img
+                        src={t.imagem}
+                        alt={t.nome}
+                        className="w-16 h-16 rounded-full border-2 border-pink-500 object-cover"
+                        onError={(e) => {
+                          e.target.parentElement.innerHTML = `
+                            <div class="w-16 h-16 rounded-full border-2 border-pink-500 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                              <span class="text-white text-lg font-bold">${t.nome?.charAt(0).toUpperCase() || 'T'}</span>
+                            </div>
+                          `
+                        }}
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full border-2 border-pink-500 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <span className="text-white text-lg font-bold">{t.nome?.charAt(0).toUpperCase() || 'T'}</span>
+                      </div>
+                    )}
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#111529]"></div>
                   </div>
                   <div className="flex-1">
@@ -461,9 +426,9 @@ function Tatuadores() {
 
                 {/* Botão Ver Perfil */}
                 <button 
-                  onClick={isRafaelSantos ? () => navigate(`/tatuador/${t.id}`) : (e) => {
+                  onClick={(e) => {
                     e.stopPropagation()
-                    // Não faz nada para os outros cards
+                    navigate(`/tatuador/${t.id}`)
                   }}
                   className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg shadow-pink-500/20"
                 >
@@ -492,6 +457,8 @@ function Tatuadores() {
               </button>
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </main>

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { Mail, Phone, MapPin, Briefcase, Check, ArrowLeft } from "lucide-react"
+import { Mail, Phone, MapPin, Briefcase, Check, ArrowLeft, Upload, X } from "lucide-react"
+import { criarUsuario, uploadImage } from "../lib/supabaseOrcamento"
 
 function CadastroTatuador() {
   const navigate = useNavigate()
@@ -17,6 +18,11 @@ function CadastroTatuador() {
     especialidades: [],
     bio: "",
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [fotoPerfil, setFotoPerfil] = useState(null)
+  const [previewFoto, setPreviewFoto] = useState(null)
+  const [uploadingFoto, setUploadingFoto] = useState(false)
 
   const planos = [
     {
@@ -92,9 +98,142 @@ function CadastroTatuador() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleFotoChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      setError('Por favor, selecione um arquivo de imagem')
+      return
+    }
+
+    // Validar tamanho (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('A imagem deve ter no máximo 5MB')
+      return
+    }
+
+    setUploadingFoto(true)
+    setError(null)
+
+    try {
+      // Criar preview
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreviewFoto(reader.result)
+      }
+      reader.readAsDataURL(file)
+
+      // Fazer upload
+      try {
+        const imageUrl = await uploadImage(file, 'perfis')
+        setFotoPerfil(imageUrl)
+      } catch (uploadError) {
+        console.error('Erro no upload:', uploadError)
+        // Se falhar, ainda permite usar a imagem localmente
+        setError('Erro ao fazer upload da foto. Você pode continuar sem foto ou tentar novamente.')
+      }
+    } catch (err) {
+      console.error('Erro ao processar foto:', err)
+      setError('Erro ao processar a imagem. Tente novamente.')
+    } finally {
+      setUploadingFoto(false)
+    }
+  }
+
+  const removerFoto = () => {
+    setFotoPerfil(null)
+    setPreviewFoto(null)
+  }
+
   const handleGoogleSignup = () => {
     // Implementar integração com Google OAuth
     console.log("Cadastro com Google")
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    // Validações
+    if (!formData.nome.trim()) {
+      setError("Por favor, preencha seu nome completo")
+      setLoading(false)
+      return
+    }
+
+    if (!formData.email.trim()) {
+      setError("Por favor, preencha seu email")
+      setLoading(false)
+      return
+    }
+
+    if (!formData.senha || formData.senha.length < 8) {
+      setError("A senha deve ter no mínimo 8 caracteres")
+      setLoading(false)
+      return
+    }
+
+    try {
+      // Criar localização
+      const localizacao = formData.cidade && formData.estado 
+        ? `${formData.cidade}, ${formData.estado}`
+        : null
+
+      // Definir especialidade (primeira selecionada ou primeira da lista)
+      const especialidade = formData.especialidades.length > 0 
+        ? formData.especialidades[0] 
+        : null
+
+      // Definir estilo baseado na especialidade ou padrão
+      const estilo = especialidade || 'Profissional'
+
+      // Formatar experiência
+      const experienciaFormatada = formData.experiencia 
+        ? `${formData.experiencia} anos`
+        : null
+
+      // Criar usuário tatuador no banco
+      const { data, error: createError } = await criarUsuario({
+        nome: formData.nome.trim(),
+        email: formData.email.toLowerCase().trim(),
+        senha: formData.senha,
+        tipo_usuario: 'tatuador',
+        telefone: formData.telefone || null,
+        foto_url: fotoPerfil || null,
+        localizacao: localizacao,
+        especialidade: especialidade,
+        estilo: estilo,
+        experiencia: experienciaFormatada,
+        nota: 0,
+        avaliacoes: 0,
+        trabalhos: 0,
+        verificado: false,
+        premium: selectedPlan !== 'gratuito',
+        portfolio: []
+      })
+
+      if (createError) {
+        if (createError.code === '23505') {
+          setError("Este email já está cadastrado. Tente fazer login.")
+        } else {
+          setError(`Erro ao criar conta: ${createError.message || 'Tente novamente.'}`)
+        }
+        setLoading(false)
+        return
+      }
+
+      // Sucesso - redirecionar para login
+      alert("Conta criada com sucesso! Faça login para acessar seu dashboard.")
+      navigate("/login")
+    } catch (err) {
+      console.error("Erro no cadastro:", err)
+      setError("Erro ao criar conta. Tente novamente.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -168,8 +307,15 @@ function CadastroTatuador() {
             <div className="flex-1 h-px bg-gray-700"></div>
           </div>
 
+          {/* Mensagem de Erro */}
+          {error && (
+            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
           {/* Formulário */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Nome Completo */}
             <div>
               <label className="block text-gray-300 text-sm mb-2">Nome completo</label>
@@ -226,6 +372,50 @@ function CadastroTatuador() {
                 placeholder="Mínimo 8 caracteres"
                 className="w-full p-3 rounded-md bg-[#111529] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none transition-colors"
               />
+            </div>
+
+            {/* Foto de Perfil */}
+            <div>
+              <label className="block text-gray-300 text-sm mb-2">Foto de Perfil (opcional)</label>
+              {previewFoto ? (
+                <div className="relative inline-block">
+                  <img
+                    src={previewFoto}
+                    alt="Preview"
+                    className="w-32 h-32 rounded-full object-cover border-2 border-pink-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={removerFoto}
+                    className="absolute top-0 right-0 p-1 bg-red-500 rounded-full hover:bg-red-600 transition-colors"
+                  >
+                    <X size={16} className="text-white" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-pink-500 transition-colors bg-[#111529]">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    {uploadingFoto ? (
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-400 mb-2"></div>
+                    ) : (
+                      <>
+                        <Upload className="text-gray-400 mb-2" size={24} />
+                        <p className="mb-2 text-sm text-gray-400">
+                          <span className="font-semibold">Clique para upload</span>
+                        </p>
+                        <p className="text-xs text-gray-500">PNG, JPG ou GIF (máx. 5MB)</p>
+                      </>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFotoChange}
+                    disabled={uploadingFoto}
+                  />
+                </label>
+              )}
             </div>
 
             {/* Endereço */}
@@ -343,9 +533,10 @@ function CadastroTatuador() {
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg shadow-pink-500/30"
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-lg shadow-pink-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continuar
+                {loading ? "Criando conta..." : "Continuar"}
               </button>
             </div>
           </form>

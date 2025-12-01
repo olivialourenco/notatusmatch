@@ -27,17 +27,11 @@ function Login() {
     setLoading(true)
 
     try {
-      // Simular delay de autenticação
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // Fazer login usando o sistema de autenticação
-      const resultado = fazerLogin(email, password)
+      // Fazer login usando o sistema de autenticação (agora é async)
+      const resultado = await fazerLogin(email, password)
       
       if (resultado.success) {
         const user = resultado.user
-        
-        // Se não marcar "lembrar-me", não salvar no localStorage (já foi salvo na função fazerLogin)
-        // Mas podemos adicionar lógica adicional aqui se necessário
         
         // Redirecionar baseado no tipo de usuário ou página de origem
         if (user.tipo === 'tatuador') {

@@ -12,8 +12,11 @@ export async function uploadImage(file, folder = 'referencias') {
     const fileName = `${Math.random()}.${fileExt}`
     const filePath = `${folder}/${fileName}`
 
+    // Usar bucket 'orcamentos' para tudo (referencias e perfis)
+    const bucketName = 'orcamentos'
+    
     const { data, error } = await supabase.storage
-      .from('orcamentos')
+      .from(bucketName)
       .upload(filePath, file, {
         cacheControl: '3600',
         upsert: false
@@ -32,7 +35,7 @@ export async function uploadImage(file, folder = 'referencias') {
 
     // Obter URL pública
     const { data: { publicUrl } } = supabase.storage
-      .from('orcamentos')
+      .from(bucketName)
       .getPublicUrl(filePath)
 
     return publicUrl
@@ -178,6 +181,25 @@ export async function buscarUsuarioPorId(usuarioId) {
 }
 
 /**
+ * Buscar todos os tatuadores
+ */
+export async function buscarTatuadores() {
+  try {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('tipo_usuario', 'tatuador')
+      .order('nome', { ascending: true })
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    console.error('Erro ao buscar tatuadores:', error)
+    return { data: null, error }
+  }
+}
+
+/**
  * Contar solicitações pendentes de um tatuador
  */
 export async function contarSolicitacoesPendentes(tatuadorId) {
@@ -196,3 +218,55 @@ export async function contarSolicitacoesPendentes(tatuadorId) {
   }
 }
 
+/**
+ * Criar novo usuário (cadastro)
+ */
+export async function criarUsuario(dadosUsuario) {
+  try {
+    // Converter portfolio para JSONB se for array
+    const dadosFormatados = { ...dadosUsuario }
+    if (Array.isArray(dadosFormatados.portfolio)) {
+      dadosFormatados.portfolio = JSON.stringify(dadosFormatados.portfolio)
+    } else if (!dadosFormatados.portfolio) {
+      dadosFormatados.portfolio = JSON.stringify([])
+    }
+
+    const { data, error } = await supabase
+      .from('usuarios')
+      .insert([dadosFormatados])
+      .select()
+      .single()
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (error) {
+    console.error('Erro ao criar usuário:', error)
+    return { data: null, error }
+  }
+}
+
+/**
+ * Buscar usuário por email e senha (login)
+ */
+export async function buscarUsuarioPorEmailSenha(email, senha) {
+  try {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('email', email.toLowerCase())
+      .eq('senha', senha)
+      .single()
+
+    if (error) {
+      // Se não encontrar, retornar null sem erro
+      if (error.code === 'PGRST116') {
+        return { data: null, error: null }
+      }
+      throw error
+    }
+    return { data, error: null }
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error)
+    return { data: null, error }
+  }
+}
