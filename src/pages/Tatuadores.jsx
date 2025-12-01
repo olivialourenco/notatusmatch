@@ -1,7 +1,9 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { MapPin, Star, Search, Filter, Award, Clock, Users, CheckCircle2 } from "lucide-react"
 
 function Tatuadores() {
+  const navigate = useNavigate()
   const [filtro, setFiltro] = useState({
     estilo: "",
     localizacao: "",
@@ -51,7 +53,7 @@ function Tatuadores() {
   // Dados dos tatuadores expandidos
   const tatuadores = [
     {
-      id: 1,
+      id: '00000000-0000-0000-0000-000000000002',
       nome: "Rafael Santos",
       especialidade: "Realismo",
       estilo: "Retratos",
@@ -69,7 +71,7 @@ function Tatuadores() {
       ]
     },
     {
-      id: 2,
+      id: '00000000-0000-0000-0000-000000000003',
       nome: "Ana Costa",
       especialidade: "Fine Line",
       estilo: "Minimalismo",
@@ -87,7 +89,7 @@ function Tatuadores() {
       ]
     },
     {
-      id: 3,
+      id: '00000000-0000-0000-0000-000000000004',
       nome: "Lucas Oliveira",
       especialidade: "Old School",
       estilo: "Colorido",
@@ -105,7 +107,7 @@ function Tatuadores() {
       ]
     },
     {
-      id: 4,
+      id: '00000000-0000-0000-0000-000000000005',
       nome: "Mariana Silva",
       especialidade: "Aquarela",
       estilo: "Colorido",
@@ -123,7 +125,7 @@ function Tatuadores() {
       ]
     },
     {
-      id: 5,
+      id: '00000000-0000-0000-0000-000000000006',
       nome: "Diego Black",
       especialidade: "Tribal",
       estilo: "Preto & Cinza",
@@ -141,7 +143,7 @@ function Tatuadores() {
       ]
     },
     {
-      id: 6,
+      id: '00000000-0000-0000-0000-000000000007',
       nome: "Julia Martins",
       especialidade: "Geometric",
       estilo: "Minimalismo",
@@ -356,10 +358,19 @@ function Tatuadores() {
 
         {/* Grid de Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {filtrados.map((t) => (
+          {filtrados.map((t) => {
+            // Apenas o Rafael Santos pode ser clicado
+            const isRafaelSantos = t.id === '00000000-0000-0000-0000-000000000002'
+            
+            return (
             <div
               key={t.id}
-              className="group bg-[#111529] border border-gray-800 rounded-2xl overflow-hidden hover:border-pink-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/10 cursor-pointer"
+              onClick={isRafaelSantos ? () => navigate(`/tatuador/${t.id}`) : undefined}
+              className={`group bg-[#111529] border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 ${
+                isRafaelSantos 
+                  ? 'hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/10 cursor-pointer' 
+                  : 'cursor-default'
+              }`}
             >
               {/* Imagem do Portfolio */}
               <div className="relative h-48 overflow-hidden bg-gradient-to-br from-purple-900/20 to-pink-900/20">
@@ -449,12 +460,19 @@ function Tatuadores() {
                 </div>
 
                 {/* Botão Ver Perfil */}
-                <button className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg shadow-pink-500/20">
+                <button 
+                  onClick={isRafaelSantos ? () => navigate(`/tatuador/${t.id}`) : (e) => {
+                    e.stopPropagation()
+                    // Não faz nada para os outros cards
+                  }}
+                  className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg shadow-pink-500/20"
+                >
                   Ver Perfil Completo
                 </button>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Mensagem quando não há resultados */}

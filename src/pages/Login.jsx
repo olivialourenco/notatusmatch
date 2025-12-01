@@ -1,11 +1,64 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Mail, Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { fazerLogin } from "../lib/auth"
 
 function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [infoMessage, setInfoMessage] = useState("")
+
+  useEffect(() => {
+    // Verificar se há mensagem de redirecionamento
+    if (location.state?.message) {
+      setInfoMessage(location.state.message)
+    }
+  }, [location])
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+
+    try {
+      // Simular delay de autenticação
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Fazer login usando o sistema de autenticação
+      const resultado = fazerLogin(email, password)
+      
+      if (resultado.success) {
+        const user = resultado.user
+        
+        // Se não marcar "lembrar-me", não salvar no localStorage (já foi salvo na função fazerLogin)
+        // Mas podemos adicionar lógica adicional aqui se necessário
+        
+        // Redirecionar baseado no tipo de usuário ou página de origem
+        if (user.tipo === 'tatuador') {
+          navigate("/tatuador/dashboard")
+        } else if (user.tipo === 'cliente') {
+          // Se havia um redirectTo, usar ele, senão ir para tatuadores
+          const redirectTo = location.state?.redirectTo
+          navigate(redirectTo || "/tatuadores")
+        } else {
+          navigate("/")
+        }
+      } else {
+        setError(resultado.error || "Email ou senha incorretos")
+      }
+    } catch (err) {
+      setError("Erro ao fazer login. Tente novamente.")
+      console.error("Erro no login:", err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <main className="flex flex-col lg:flex-row bg-gradient-to-b from-gray-100 via-purple-100 to-purple-200 flex-1 min-h-[calc(100vh-120px)]">
@@ -35,8 +88,18 @@ function Login() {
             </span>
           </p>
 
+          {/* Mensagem informativa */}
+          {infoMessage && (
+            <div className="mb-6 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-md text-sm">
+              {infoMessage}
+            </div>
+          )}
+
           {/* Formulário */}
-          <form className="space-y-5">
+          <form 
+            className="space-y-5"
+            onSubmit={handleLogin}
+          >
             {/* Campo Email */}
             <div>
               <label className="block text-gray-800 text-sm mb-2">E-mail</label>
@@ -44,6 +107,9 @@ function Login() {
                 <input
                   type="email"
                   placeholder="seuemail@exemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full p-3 pr-10 rounded-md bg-white border border-gray-300 text-black placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors"
                 />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -59,6 +125,9 @@ function Login() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   className="w-full p-3 pr-10 rounded-md bg-white border border-gray-300 text-black placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors"
                 />
                 <button
@@ -70,6 +139,13 @@ function Login() {
                 </button>
               </div>
             </div>
+
+            {/* Mensagem de Erro */}
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
 
             {/* Remember Me */}
             <div className="flex items-center">
@@ -88,9 +164,10 @@ function Login() {
             {/* Botão Login */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all duration-300 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all duration-300 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Entrar
+              {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
 

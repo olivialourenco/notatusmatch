@@ -8,6 +8,10 @@ import Tatuadores from "./pages/Tatuadores"
 import Sobre from "./pages/Sobre"
 import Contato from "./pages/Contato"
 import Login from "./pages/Login"
+import TestConnection from "./components/TestConnection"
+import PerfilTatuador from "./pages/PerfilTatuador"
+import DashboardTatuador from "./pages/DashboardTatuador"
+import DetalhesSolicitacao from "./pages/DetalhesSolicitacao"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 function App() {
@@ -25,6 +29,10 @@ function App() {
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/test-connection" element={<TestConnection />} />
+            <Route path="/tatuador/:id" element={<PerfilTatuador />} />
+            <Route path="/tatuador/dashboard" element={<DashboardTatuador />} />
+            <Route path="/solicitacao/:id" element={<DetalhesSolicitacao />} />
 
           </Routes>
         </main>
