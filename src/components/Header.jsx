@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
 import { getUsuarioLogado, ehCliente, ehTatuador, fazerLogout } from "../lib/auth"
@@ -7,6 +7,7 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [usuarioLogado, setUsuarioLogado] = useState(null)
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Atualizar usuário logado quando a rota mudar (após login/logout)
@@ -17,6 +18,7 @@ function Header() {
     fazerLogout()
     setUsuarioLogado(null)
     setIsMenuOpen(false)
+    navigate('/login')
   }
 
   return (
