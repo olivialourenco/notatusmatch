@@ -4,7 +4,7 @@
 -- ============================================
 
 -- Inserir ou atualizar todos os tatuadores com dados completos
-INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especialidade, estilo, localizacao, nota, avaliacoes, experiencia, trabalhos, verificado, premium, portfolio) VALUES
+INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especialidade, estilo, localizacao, nota, avaliacoes, experiencia, trabalhos, verificado, premium, portfolio, senha) VALUES
 -- Rafael Santos
 ('00000000-0000-0000-0000-000000000002', 
  'Rafael Santos', 
@@ -24,7 +24,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
- ]'::jsonb),
+ ]'::jsonb,
+ 'senha123'),
 
 -- Ana Costa
 ('00000000-0000-0000-0000-000000000003', 
@@ -45,7 +46,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
- ]'::jsonb),
+ ]'::jsonb,
+ 'senha123'),
 
 -- Lucas Oliveira
 ('00000000-0000-0000-0000-000000000004', 
@@ -66,7 +68,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
- ]'::jsonb),
+ ]'::jsonb,
+ 'senha123'),
 
 -- Mariana Silva
 ('00000000-0000-0000-0000-000000000005', 
@@ -87,7 +90,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
- ]'::jsonb),
+ ]'::jsonb,
+ 'senha123'),
 
 -- Diego Black
 ('00000000-0000-0000-0000-000000000006', 
@@ -108,7 +112,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop"
- ]'::jsonb),
+ ]'::jsonb,
+ 'senha123'),
 
 -- Julia Martins
 ('00000000-0000-0000-0000-000000000007', 
@@ -129,7 +134,8 @@ INSERT INTO usuarios (id, nome, email, tipo_usuario, telefone, foto_url, especia
  '[
    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300&h=300&fit=crop",
    "https://images.unsplash.com/photo-1576075796033-848c2a5d3696?w=300&h=300&fit=crop"
- ]'::jsonb)
+ ]'::jsonb,
+ 'senha123')
 
 ON CONFLICT (email) DO UPDATE SET
   nome = EXCLUDED.nome,
@@ -145,7 +151,8 @@ ON CONFLICT (email) DO UPDATE SET
   trabalhos = EXCLUDED.trabalhos,
   verificado = EXCLUDED.verificado,
   premium = EXCLUDED.premium,
-  portfolio = EXCLUDED.portfolio;
+  portfolio = EXCLUDED.portfolio,
+  senha = COALESCE(EXCLUDED.senha, usuarios.senha);
 
 -- Verificar se foram inseridos
 SELECT 

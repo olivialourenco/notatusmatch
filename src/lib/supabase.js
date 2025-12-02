@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+let supabase
+
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('❌ ERRO: Variáveis de ambiente do Supabase não encontradas!')
   console.error('Por favor, crie um arquivo .env na raiz do projeto com:')
@@ -12,9 +14,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   
   // Criar um cliente vazio para evitar crash, mas mostrar erro no console
   // Isso permite que a aplicação carregue e mostre mensagens de erro
-  const placeholderClient = createClient('https://placeholder.supabase.co', 'placeholder-key')
-  export const supabase = placeholderClient
+  supabase = createClient('https://placeholder.supabase.co', 'placeholder-key')
 } else {
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
+
+export { supabase }
 

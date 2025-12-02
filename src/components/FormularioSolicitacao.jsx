@@ -12,7 +12,6 @@ function FormularioSolicitacao({ tatuadorId, onClose, onSuccess }) {
     descricao: '',
     parte_corpo: '',
     tamanho: '',
-    orcamento_sugerido: '',
     imagem_referencia: null
   })
   const [previewImage, setPreviewImage] = useState(null)
@@ -147,7 +146,6 @@ function FormularioSolicitacao({ tatuadorId, onClose, onSuccess }) {
         descricao: formData.descricao,
         parte_corpo: formData.parte_corpo,
         tamanho: formData.tamanho,
-        orcamento_sugerido: formData.orcamento_sugerido || null,
         imagem_referencia: formData.imagem_referencia || null,
         status: 'pendente'
       })
@@ -254,21 +252,6 @@ function FormularioSolicitacao({ tatuadorId, onClose, onSuccess }) {
                 ))}
               </select>
             </div>
-          </div>
-
-          {/* Orçamento Sugerido */}
-          <div>
-            <label className="block text-gray-300 text-sm mb-2">
-              Orçamento Sugerido (opcional)
-            </label>
-            <input
-              type="text"
-              name="orcamento_sugerido"
-              value={formData.orcamento_sugerido}
-              onChange={handleInputChange}
-              placeholder="Ex: R$ 500 ~ R$ 800"
-              className="w-full p-3 rounded-lg bg-[#0B1120] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none transition-colors"
-            />
           </div>
 
           {/* Upload de Imagem */}

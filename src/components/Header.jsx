@@ -1,9 +1,23 @@
-import { Link } from "react-router-dom"
-import { useState } from "react"
+import { Link, useLocation } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
+import { getUsuarioLogado, ehCliente, ehTatuador, fazerLogout } from "../lib/auth"
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [usuarioLogado, setUsuarioLogado] = useState(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    // Atualizar usuário logado quando a rota mudar (após login/logout)
+    setUsuarioLogado(getUsuarioLogado())
+  }, [location])
+
+  const handleLogout = () => {
+    fazerLogout()
+    setUsuarioLogado(null)
+    setIsMenuOpen(false)
+  }
 
   return (
     <header className="relative flex items-center justify-between p-4 md:p-6 bg-[#0A0E1A] shadow-md z-50">
@@ -12,7 +26,7 @@ function Header() {
       </div>
 
       {/* Menu Desktop */}
-      <nav className="hidden md:flex space-x-4 lg:space-x-6 text-gray-300">
+      <nav className="hidden md:flex space-x-4 lg:space-x-6 text-gray-300 items-center">
         <Link
           to="/"
           className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
@@ -40,6 +54,40 @@ function Header() {
         >
           Contato
         </Link>
+
+        {ehCliente() && (
+          <Link
+            to="/minhas-solicitacoes"
+            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base text-pink-400 font-semibold"
+          >
+            Minhas Solicitações
+          </Link>
+        )}
+
+        {ehTatuador() && (
+          <Link
+            to="/tatuador/dashboard"
+            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base text-pink-400 font-semibold"
+          >
+            Dashboard
+          </Link>
+        )}
+
+        {usuarioLogado ? (
+          <button
+            onClick={handleLogout}
+            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          >
+            Sair
+          </button>
+        ) : (
+          <Link
+            to="/login"
+            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          >
+            Entrar
+          </Link>
+        )}
       </nav>
 
       {/* Botão Menu Mobile */}
@@ -89,6 +137,45 @@ function Header() {
               >
                 Contato
               </Link>
+
+              {ehCliente() && (
+                <Link
+                  to="/minhas-solicitacoes"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-pink-400 font-semibold hover:text-pink-300 transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                >
+                  Minhas Solicitações
+                </Link>
+              )}
+
+              {ehTatuador() && (
+                <Link
+                  to="/tatuador/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-pink-400 font-semibold hover:text-pink-300 transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                >
+                  Dashboard
+                </Link>
+              )}
+
+              {usuarioLogado ? (
+                <button
+                  onClick={() => {
+                    handleLogout()
+                  }}
+                  className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 text-left w-full"
+                >
+                  Sair
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                >
+                  Entrar
+                </Link>
+              )}
             </div>
           </nav>
         </>

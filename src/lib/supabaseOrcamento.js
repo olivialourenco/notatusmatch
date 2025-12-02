@@ -95,21 +95,27 @@ export async function buscarSolicitacoesTatuador(tatuadorId, status = null) {
 /**
  * Buscar solicitações de um cliente
  */
-export async function buscarSolicitacoesCliente(clienteId) {
+export async function buscarSolicitacoesCliente(clienteId, status = null) {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('solicitacoes_orcamento')
       .select(`
         *,
-        tatuador:usuarios!tatuador_id(id, nome, email, foto_url)
+        tatuador:usuarios!tatuador_id(id, nome, email, foto_url, especialidade, localizacao)
       `)
       .eq('cliente_id', clienteId)
       .order('created_at', { ascending: false })
 
+    if (status) {
+      query = query.eq('status', status)
+    }
+
+    const { data, error } = await query
+
     if (error) throw error
     return { data, error: null }
   } catch (error) {
-    console.error('Erro ao buscar solicitações:', error)
+    console.error('Erro ao buscar solicitações do cliente:', error)
     return { data: null, error }
   }
 }

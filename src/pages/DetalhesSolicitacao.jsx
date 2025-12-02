@@ -202,15 +202,6 @@ function DetalhesSolicitacao() {
             <p className="text-white font-semibold">{solicitacao.tamanho}</p>
           </div>
 
-          {solicitacao.orcamento_sugerido && (
-            <div className="bg-[#111529] border border-gray-800 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <DollarSign className="text-yellow-400" size={20} />
-                <h3 className="text-sm text-gray-400">Orçamento Sugerido</h3>
-              </div>
-              <p className="text-white font-semibold">{solicitacao.orcamento_sugerido}</p>
-            </div>
-          )}
         </div>
 
         {/* Imagem de Referência */}
@@ -253,86 +244,83 @@ function DetalhesSolicitacao() {
           </div>
         ) : null}
 
-        {/* Ações */}
-        <div className="bg-[#111529] border border-gray-800 rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Ações</h3>
-          <div className="space-y-3">
-            {solicitacao.status === 'pendente' && (
-              <button
-                onClick={() => handleMudarStatus('visto')}
-                disabled={updating}
-                className="w-full px-6 py-3 bg-blue-500/20 border border-blue-500/50 text-blue-400 rounded-lg font-semibold hover:bg-blue-500/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                <Eye size={18} />
-                Marcar como Visto
-              </button>
-            )}
+        {/* Botões de Ação */}
+        <div className="space-y-3">
+          {solicitacao.status === 'pendente' && (
+            <button
+              onClick={() => handleMudarStatus('visto')}
+              disabled={updating}
+              className="w-full px-6 py-3 bg-blue-500/20 border border-blue-500/50 text-blue-400 rounded-lg font-semibold hover:bg-blue-500/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <Eye size={18} />
+              Marcar como Visto
+            </button>
+          )}
 
-            {solicitacao.status !== 'respondido' && (
-              <>
-                {!mostrarFormResposta ? (
-                  <button
-                    onClick={() => setMostrarFormResposta(true)}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all flex items-center justify-center gap-2"
-                  >
-                    <MessageSquare size={18} />
-                    Responder Solicitação
-                  </button>
-                ) : (
-                  <div className="space-y-4 p-4 bg-[#0B1120] rounded-lg border border-gray-700">
-                    <div>
-                      <label className="block text-gray-300 text-sm mb-2">Mensagem (opcional)</label>
-                      <textarea
-                        value={resposta.mensagem_resposta}
-                        onChange={(e) => setResposta({ ...resposta, mensagem_resposta: e.target.value })}
-                        placeholder="Deixe uma mensagem para o cliente..."
-                        rows="3"
-                        className="w-full p-3 rounded-lg bg-[#111529] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none resize-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-300 text-sm mb-2">Valor Estimado (opcional)</label>
-                      <input
-                        type="text"
-                        value={resposta.valor_estimado}
-                        onChange={(e) => setResposta({ ...resposta, valor_estimado: e.target.value })}
-                        placeholder="Ex: R$ 500,00"
-                        className="w-full p-3 rounded-lg bg-[#111529] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => {
-                          setMostrarFormResposta(false)
-                          setResposta({ mensagem_resposta: '', valor_estimado: '' })
-                        }}
-                        className="flex-1 px-6 py-3 bg-[#0B1120] border border-gray-700 text-gray-300 rounded-lg font-semibold hover:border-gray-600 transition-all"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        onClick={handleSalvarResposta}
-                        disabled={updating}
-                        className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                      >
-                        {updating ? (
-                          <>
-                            <Loader className="animate-spin" size={18} />
-                            Salvando...
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle size={18} />
-                            Salvar Resposta
-                          </>
-                        )}
-                      </button>
-                    </div>
+          {solicitacao.status !== 'respondido' && (
+            <>
+              {!mostrarFormResposta ? (
+                <button
+                  onClick={() => setMostrarFormResposta(true)}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageSquare size={18} />
+                  Responder Solicitação
+                </button>
+              ) : (
+                <div className="space-y-4 p-4 bg-[#0B1120] rounded-lg border border-gray-700">
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">Mensagem (opcional)</label>
+                    <textarea
+                      value={resposta.mensagem_resposta}
+                      onChange={(e) => setResposta({ ...resposta, mensagem_resposta: e.target.value })}
+                      placeholder="Deixe uma mensagem para o cliente..."
+                      rows="3"
+                      className="w-full p-3 rounded-lg bg-[#111529] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none resize-none"
+                    />
                   </div>
-                )}
-              </>
-            )}
-          </div>
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">Valor Estimado (opcional)</label>
+                    <input
+                      type="text"
+                      value={resposta.valor_estimado}
+                      onChange={(e) => setResposta({ ...resposta, valor_estimado: e.target.value })}
+                      placeholder="Ex: R$ 500,00"
+                      className="w-full p-3 rounded-lg bg-[#111529] border border-gray-700 text-white placeholder-gray-500 focus:border-pink-500 focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setMostrarFormResposta(false)
+                        setResposta({ mensagem_resposta: '', valor_estimado: '' })
+                      }}
+                      className="flex-1 px-6 py-3 bg-[#0B1120] border border-gray-700 text-gray-300 rounded-lg font-semibold hover:border-gray-600 transition-all"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSalvarResposta}
+                      disabled={updating}
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {updating ? (
+                        <>
+                          <Loader className="animate-spin" size={18} />
+                          Salvando...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle size={18} />
+                          Salvar Resposta
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </main>

@@ -249,32 +249,6 @@ function DashboardTatuador() {
                     </div>
                   )}
                 </div>
-
-                {/* Ações Rápidas */}
-                <div className="flex gap-2 pt-4 border-t border-gray-800">
-                  {solicitacao.status === 'pendente' && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleMudarStatus(solicitacao.id, 'visto')
-                      }}
-                      className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-semibold hover:bg-blue-500/30 transition-colors"
-                    >
-                      Marcar como Visto
-                    </button>
-                  )}
-                  {solicitacao.status !== 'respondido' && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleMudarStatus(solicitacao.id, 'respondido')
-                      }}
-                      className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg text-sm font-semibold hover:bg-green-500/30 transition-colors"
-                    >
-                      Marcar como Respondido
-                    </button>
-                  )}
-                </div>
               </div>
             ))}
           </div>
