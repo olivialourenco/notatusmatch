@@ -112,7 +112,13 @@ function PerfilTatuador() {
                     alt={tatuador.nome}
                     className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500 object-cover"
                     onError={(e) => {
-                      e.target.src = `https://i.pravatar.cc/300?img=${tatuador.id?.slice(-2) || '1'}`
+                      // Se a imagem falhar ao carregar, mostrar inicial
+                      const parent = e.target.parentElement
+                      parent.innerHTML = `
+                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                          <span class="text-white text-2xl font-bold">${tatuador.nome?.charAt(0).toUpperCase() || 'T'}</span>
+                        </div>
+                      `
                     }}
                   />
                 ) : (
@@ -166,9 +172,9 @@ function PerfilTatuador() {
                 <div className="bg-[#111529] p-4 rounded-lg border border-gray-800">
                   <div className="flex items-center gap-2 text-yellow-400 mb-1">
                     <Star size={20} className="fill-yellow-400" />
-                    <span className="text-2xl font-bold">{tatuador.nota || 4.8}</span>
+                    <span className="text-2xl font-bold">{parseFloat(tatuador.nota) || 0}</span>
                   </div>
-                  <p className="text-sm text-gray-400">{tatuador.avaliacoes || 0} avaliações</p>
+                  <p className="text-sm text-gray-400">{parseInt(tatuador.avaliacoes) || 0} avaliações</p>
                 </div>
                 <div className="bg-[#111529] p-4 rounded-lg border border-gray-800">
                   <div className="flex items-center gap-2 text-purple-400 mb-1">
@@ -180,7 +186,7 @@ function PerfilTatuador() {
                 <div className="bg-[#111529] p-4 rounded-lg border border-gray-800">
                   <div className="flex items-center gap-2 text-pink-400 mb-1">
                     <Users size={20} />
-                    <span className="text-2xl font-bold">{tatuador.trabalhos || 200}+</span>
+                    <span className="text-2xl font-bold">{parseInt(tatuador.trabalhos) || 0}+</span>
                   </div>
                   <p className="text-sm text-gray-400">Trabalhos</p>
                 </div>

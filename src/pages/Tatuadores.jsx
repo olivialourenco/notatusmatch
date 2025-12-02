@@ -94,10 +94,10 @@ function Tatuadores() {
             estilo: t.estilo || '',
             localizacao: t.localizacao || '',
             nota: parseFloat(t.nota) || 0,
-            avaliacoes: t.avaliacoes || 0,
+            avaliacoes: parseInt(t.avaliacoes) || 0,
             experiencia: t.experiencia || '',
-            trabalhos: t.trabalhos || 0,
-            imagem: t.foto_url || `https://i.pravatar.cc/150?img=${t.id}`,
+            trabalhos: parseInt(t.trabalhos) || 0,
+            imagem: t.foto_url || null,
             verificado: t.verificado || false,
             premium: t.premium || false,
             portfolio: portfolioArray
@@ -400,7 +400,7 @@ function Tatuadores() {
                       <Star size={16} className="fill-yellow-400" />
                       <span className="font-bold">{t.nota}</span>
                     </div>
-                    <p className="text-xs text-gray-400">{t.avaliacoes} avaliações</p>
+                    <p className="text-xs text-gray-400">{parseInt(t.avaliacoes) || 0} avaliações</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-purple-400 mb-1">

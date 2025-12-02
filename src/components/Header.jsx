@@ -31,28 +31,36 @@ function Header() {
       <nav className="hidden md:flex space-x-4 lg:space-x-6 text-gray-300 items-center">
         <Link
           to="/"
-          className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+            location.pathname === '/' ? 'text-pink-400 font-semibold' : ''
+          }`}
         >
           Início
         </Link>
 
         <Link
           to="/tatuadores"
-          className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+            location.pathname === '/tatuadores' || (location.pathname.startsWith('/tatuador/') && location.pathname !== '/tatuador/dashboard' && !location.pathname.startsWith('/solicitacao/')) ? 'text-pink-400 font-semibold' : ''
+          }`}
         >
           Tatuadores
         </Link>
 
         <Link
           to="/sobre"
-          className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+            location.pathname === '/sobre' ? 'text-pink-400 font-semibold' : ''
+          }`}
         >
           Sobre
         </Link>
 
         <Link
           to="/contato"
-          className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+          className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+            location.pathname === '/contato' ? 'text-pink-400 font-semibold' : ''
+          }`}
         >
           Contato
         </Link>
@@ -60,7 +68,9 @@ function Header() {
         {ehCliente() && (
           <Link
             to="/minhas-solicitacoes"
-            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base text-pink-400 font-semibold"
+            className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+              location.pathname.startsWith('/minhas-solicitacoes') ? 'text-pink-400 font-semibold' : ''
+            }`}
           >
             Minhas Solicitações
           </Link>
@@ -69,7 +79,9 @@ function Header() {
         {ehTatuador() && (
           <Link
             to="/tatuador/dashboard"
-            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base text-pink-400 font-semibold"
+            className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+              location.pathname === '/tatuador/dashboard' || location.pathname.startsWith('/solicitacao/') ? 'text-pink-400 font-semibold' : ''
+            }`}
           >
             Dashboard
           </Link>
@@ -85,7 +97,9 @@ function Header() {
         ) : (
           <Link
             to="/login"
-            className="hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base"
+            className={`hover:text-white transition-transform duration-300 hover:-translate-y-1 hover:scale-110 inline-block text-sm lg:text-base ${
+              location.pathname === '/login' ? 'text-pink-400 font-semibold' : ''
+            }`}
           >
             Entrar
           </Link>
@@ -114,28 +128,36 @@ function Header() {
               <Link
                 to="/"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                  location.pathname === '/' ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                }`}
               >
                 Início
               </Link>
               <Link
                 to="/tatuadores"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                  location.pathname === '/tatuadores' || (location.pathname.startsWith('/tatuador/') && location.pathname !== '/tatuador/dashboard' && !location.pathname.startsWith('/solicitacao/')) ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                }`}
               >
                 Tatuadores
               </Link>
               <Link
                 to="/sobre"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                  location.pathname === '/sobre' ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                }`}
               >
                 Sobre
               </Link>
               <Link
                 to="/contato"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                  location.pathname === '/contato' ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                }`}
               >
                 Contato
               </Link>
@@ -144,7 +166,9 @@ function Header() {
                 <Link
                   to="/minhas-solicitacoes"
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-pink-400 font-semibold hover:text-pink-300 transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                  className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                    location.pathname.startsWith('/minhas-solicitacoes') ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                  }`}
                 >
                   Minhas Solicitações
                 </Link>
@@ -154,7 +178,9 @@ function Header() {
                 <Link
                   to="/tatuador/dashboard"
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-pink-400 font-semibold hover:text-pink-300 transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                  className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                    location.pathname === '/tatuador/dashboard' || location.pathname.startsWith('/solicitacao/') ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                  }`}
                 >
                   Dashboard
                 </Link>
@@ -173,7 +199,9 @@ function Header() {
                 <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-gray-300 hover:text-white transition-colors py-3 px-4 rounded-lg hover:bg-gray-800"
+                  className={`transition-colors py-3 px-4 rounded-lg hover:bg-gray-800 ${
+                    location.pathname === '/login' ? 'text-pink-400 font-semibold' : 'text-gray-300 hover:text-white'
+                  }`}
                 >
                   Entrar
                 </Link>
